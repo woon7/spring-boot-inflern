@@ -1,5 +1,6 @@
 package com.example.demo2;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -8,6 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlHeading1;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +32,7 @@ public class SampleControllerTest {
     MockMvc mockMvc;
 
     @Test
-    public void hello() throws Exception {
+    public void helloMockMvc() throws Exception {
 
         mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk())
@@ -35,5 +40,15 @@ public class SampleControllerTest {
                 .andExpect(view().name("hello"))
                 .andExpect(model().attribute("name", is("keesun")))
                 .andExpect(content().string(containsString("keesun")));
+    }
+
+    @Autowired
+    WebClient webClient;
+
+    @Test
+    public void helloWebClient() throws Exception {
+        HtmlPage page = webClient.getPage("/hello");
+        HtmlHeading1 h1 = page.getFirstByXPath("//h1");
+        assertThat(h1.getTextContent()).isEqualToIgnoringCase("keesun");
     }
 }

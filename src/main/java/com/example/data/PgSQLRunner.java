@@ -12,10 +12,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * H2Runner
+ * H2Runner -> MySQLRunner -> PgSQLRunner
  */
 @Component
-public class H2Runner implements ApplicationRunner {
+public class PgSQLRunner implements ApplicationRunner {
 
     @Autowired
     DataSource dataSource;
@@ -26,15 +26,17 @@ public class H2Runner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         try(Connection connection = dataSource.getConnection()) {
-            connection.getMetaData().getURL();
-            connection.getMetaData().getUserName();
+            System.out.println(dataSource.getClass());
+            System.out.println(connection.getMetaData().getDriverName());
+            System.out.println(connection.getMetaData().getURL());
+            System.out.println(connection.getMetaData().getUserName());
             
             Statement statement = connection.createStatement();
-            String sql = "CREATE TABLE USER (ID INTEGER NOT NULL, name VARCHAR(255), PRIMARY KEY (id))";
+            String sql = "CREATE TABLE account (ID INTEGER NOT NULL, name VARCHAR(255), PRIMARY KEY (id))";
             statement.executeUpdate(sql);
         }
 
-        jdbcTemplate.execute("INSERT INTO USER VALUES (1, 'keesun')");
+        jdbcTemplate.execute("INSERT INTO account VALUES (1, 'keesun')");
     }
 
 }

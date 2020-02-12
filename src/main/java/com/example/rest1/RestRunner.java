@@ -76,6 +76,7 @@ public class RestRunner implements ApplicationRunner {
 
             System.out.println("async: " + stopWatch.prettyPrint());
             stopWatch.start();
-        });
+        });   
     }
+    
 }

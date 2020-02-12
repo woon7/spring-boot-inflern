@@ -51,19 +51,19 @@ public class RestRunner implements ApplicationRunner {
     public void async() {
         WebClient webClient = builder.build();
 
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        StopWatch helloStopWatch = new StopWatch();
+        helloStopWatch.start();
+
+        StopWatch worldStopWatch = new StopWatch();
+        worldStopWatch.start();
 
         Mono<String> helloMono = webClient.get().uri("http://localhost:8080/hello")
                                     .retrieve()
                                     .bodyToMono(String.class);
         helloMono.subscribe(s -> {
             System.out.println("async: " + s);
-            if(stopWatch.isRunning())
-                stopWatch.stop();
-
-            System.out.println("async: " + stopWatch.prettyPrint());
-            stopWatch.start();
+            helloStopWatch.stop();
+            System.out.println("async: " + helloStopWatch.prettyPrint());
         });
 
         Mono<String> worldMono = webClient.get().uri("http://localhost:8080/world")
@@ -71,12 +71,9 @@ public class RestRunner implements ApplicationRunner {
                                     .bodyToMono(String.class);
         worldMono.subscribe(s -> {
             System.out.println("async: " + s);
-            if(stopWatch.isRunning())
-                stopWatch.stop();
-
-            System.out.println("async: " + stopWatch.prettyPrint());
-            stopWatch.start();
+            worldStopWatch.stop();
+            System.out.println("async: " + worldStopWatch.prettyPrint());
         });   
     }
-    
+
 }
